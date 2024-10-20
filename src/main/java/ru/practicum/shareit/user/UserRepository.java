@@ -2,7 +2,10 @@ package ru.practicum.shareit.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import ru.practicum.shareit.user.exceptions.UserNotFoundException;
+import ru.practicum.shareit.user.exceptions.UserValidationException;
 
 import java.util.Map;
 
@@ -10,6 +13,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 public class UserRepository {
+    @Autowired
     private final Map<Long, User> userStorage;
 
     public User addUser(User user) {
@@ -31,8 +35,8 @@ public class UserRepository {
     }
 
     public void deleteUser(long userId) {
-        log.info("Удален пользователь с id {}", userId);
         userStorage.remove(userId);
+        log.info("Удален пользователь с id {}", userId);
     }
 
     private Long generateNewId() {
@@ -41,11 +45,17 @@ public class UserRepository {
         } else return 1L;
     }
 
-    public boolean validateEmail(String email) {
-        return userStorage.values().stream().anyMatch(user -> user.getEmail().equals(email));
+    public void validateEmail(String email) {
+        if (userStorage.values().stream().anyMatch(user -> user.getEmail().equals(email))) {
+            throw new UserValidationException("email " + email + " уже используется");
+        }
+        ;
     }
 
-    public boolean validateUser(Long userId) {
-        return userStorage.containsKey(userId);
+    public void validateUser(Long userId) {
+        if (!userStorage.containsKey(userId)) {
+            throw new UserNotFoundException("Пользователь с id " + userId + " не найден");
+        }
+        ;
     }
 }

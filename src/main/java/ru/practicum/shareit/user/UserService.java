@@ -7,10 +7,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final UserValidator userValidator;
 
     public User addUser(User user) {
-        userValidator.validateUserEmail(user.getEmail());
+        userRepository.validateEmail(user.getEmail());
         return userRepository.addUser(user);
     }
 
@@ -20,9 +19,11 @@ public class UserService {
 
     public User updateUser(Long userId, User user) {
         User updatingUser = userRepository.getUserById(userId);
-        if (user.getName() != null) updatingUser.setName(user.getName());
+        if (user.getName() != null) {
+            updatingUser.setName(user.getName());
+        }
         if (user.getEmail() != null) {
-            userValidator.validateUserEmail(user.getEmail());
+            userRepository.validateEmail(user.getEmail());
             updatingUser.setEmail(user.getEmail());
         }
         return userRepository.updateUser(userId, updatingUser);

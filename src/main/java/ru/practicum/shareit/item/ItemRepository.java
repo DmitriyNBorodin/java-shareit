@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.item.model.Item;
 
@@ -10,6 +11,7 @@ import java.util.Map;
 @Repository
 @RequiredArgsConstructor
 public class ItemRepository {
+    @Autowired
     private final Map<Long, Item> itemStorage;
 
     public Item addItem(Item item) {
