@@ -5,7 +5,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
 @SpringBootTest
-@TestPropertySource(locations = "classpath:resources/testing.properties")
+@TestPropertySource(locations = "classpath:testing.properties")
 class ShareItTests {
 
 	@Test
