@@ -65,7 +65,7 @@ public class BookingService {
     public Booking getBookingById(Long userId, Long bookingId) {
         Item bookedItem = bookingRepository.getItemById(bookingId);
         Booking requiredBooking = bookingRepository.getReferenceById(bookingId);
-        if (bookedItem.getOwnerId() != userId && requiredBooking.getBooker().getId() != userId) {
+        if (bookedItem.getOwnerId().equals(userId) && requiredBooking.getBooker().getId().equals(userId)) {
             throw new ValidationException("Просматривать состояние бронирования может только его создатель " +
                                           "или владалец предмета");
         }
