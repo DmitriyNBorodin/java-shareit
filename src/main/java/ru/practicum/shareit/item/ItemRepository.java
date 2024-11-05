@@ -9,8 +9,7 @@ import java.util.Optional;
 public interface ItemRepository extends JpaRepository<Item, Long> {
     public List<Item> findItemByOwnerId(Long ownerId);
 
-    public List<Item> getByNameContainingOrDescriptionContainingAllIgnoreCase
-            (String nameSearch, String descriptionSearch);
+    public List<Item> getByNameContainingOrDescriptionContainingAllIgnoreCase(String nameSearch, String descriptionSearch);
 
     public Optional<Item> getItemById(Long itemId);
 }
