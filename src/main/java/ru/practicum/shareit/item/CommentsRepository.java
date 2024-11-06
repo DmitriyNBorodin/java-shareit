@@ -8,5 +8,5 @@ import java.util.Set;
 
 public interface CommentsRepository extends JpaRepository<Comment, Long> {
     @Query("select c from Comment as c join c.item as i where i.id = ?1")
-    public Set<Comment> getCommentsByItemId(Long itemId);
+    Set<Comment> getCommentsByItemId(Long itemId);
 }

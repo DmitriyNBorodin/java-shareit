@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
-    public List<Item> findItemByOwnerId(Long ownerId);
+    List<Item> findItemByOwnerId(Long ownerId);
 
-    public List<Item> getByNameContainingOrDescriptionContainingAllIgnoreCase(String nameSearch, String descriptionSearch);
+    List<Item> getByNameContainingOrDescriptionContainingAllIgnoreCase(String nameSearch, String descriptionSearch);
 
-    public Optional<Item> getItemById(Long itemId);
+    Optional<Item> getItemById(Long itemId);
 }
