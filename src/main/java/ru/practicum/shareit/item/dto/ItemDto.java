@@ -5,6 +5,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 /**
  * TODO Sprint add-controllers.
  */
@@ -18,4 +21,7 @@ public class ItemDto {
     String description;
     @NotNull(message = "Требуется поле available")
     Boolean available;
+    LocalDateTime lastBooking;
+    LocalDateTime nextBooking;
+    List<CommentDto> comments;
 }
