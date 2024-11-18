@@ -1,8 +1,6 @@
 package ru.yandex.practicum.item;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.booking.Booking;
 import ru.yandex.practicum.booking.BookingStatus;
 import ru.yandex.practicum.item.dto.CommentDto;
@@ -14,10 +12,8 @@ import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
 class CommentDtoMapperTest {
-    @Autowired
-    private CommentDtoMapper commentDtoMapper;
+    private final CommentDtoMapper commentDtoMapper = new CommentDtoMapper();
 
     @Test
     void toCommentTest() {
