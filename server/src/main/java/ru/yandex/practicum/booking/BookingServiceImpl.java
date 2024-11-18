@@ -74,7 +74,7 @@ public class BookingServiceImpl implements BookingService {
                 .orElseThrow(() -> new ItemNotFoundException("Забронированный предмет не найден"))
                 .getItem();
         Booking requiredBooking = bookingRepository.getReferenceById(bookingId);
-        if (bookedItem.getOwnerId().equals(userId) && requiredBooking.getBooker().getId().equals(userId)) {
+        if (!bookedItem.getOwnerId().equals(userId) && !requiredBooking.getBooker().getId().equals(userId)) {
             throw new ValidationException("Просматривать состояние бронирования может только его создатель " +
                                           "или владалец предмета");
         }

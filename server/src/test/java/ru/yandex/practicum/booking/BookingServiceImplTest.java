@@ -143,6 +143,22 @@ public class BookingServiceImplTest {
     }
 
     @Test
+    void approveBookingRejectedTest() {
+        Item item = new Item(1L, 1L, "name", "description", true, null);
+        User user = new User(2L, "name", "1@mail.com");
+        Booking booking = Booking.builder().id(1L).start(LocalDateTime.now()).end(LocalDateTime.now().plusHours(1))
+                .item(item).booker(user).status(BookingStatus.WAITING).build();
+        BookedItem bookedItem = () -> new Item(1L, 1L, "name", "description", true, null);
+        when(bookingRepository.findBookingById(Mockito.anyLong())).thenReturn(Optional.of(bookedItem));
+        when(bookingRepository.getReferenceById(Mockito.anyLong())).thenReturn(booking);
+
+        bookingService.approveBooking(1L, 1L, "false");
+        verify(bookingRepository).save(bookingArgumentCaptor.capture());
+        Booking savedBooking = bookingArgumentCaptor.getValue();
+        assertEquals(BookingStatus.REJECTED, savedBooking.getStatus());
+    }
+
+    @Test
     void getBookingByIdTest() {
         Item item = new Item(1L, 1L, "name", "description", true, null);
         User booker = new User(1L, "name", "1@mail.com");
@@ -161,6 +177,25 @@ public class BookingServiceImplTest {
         bookingService.getBookingById(1L, 1L);
         verify(bookingRepository).findBookingById(Mockito.anyLong());
         verify(bookingRepository).getReferenceById(Mockito.anyLong());
+    }
+
+    @Test
+    void getBookingByIdByInvalidUserTest() {
+        Item item = new Item(1L, 10L, "name", "description", true, null);
+        User booker = new User(15L, "name", "1@mail.com");
+        Booking booking = Booking.builder()
+                .id(1L)
+                .start(LocalDateTime.now())
+                .end(LocalDateTime.now().plusHours(1))
+                .item(item)
+                .booker(booker)
+                .status(BookingStatus.WAITING)
+                .build();
+        BookedItem bookedItem = () -> new Item(1L, 10L, "name", "description", true, null);
+        when(bookingRepository.findBookingById(Mockito.anyLong())).thenReturn(Optional.of(bookedItem));
+        when(bookingRepository.getReferenceById(Mockito.anyLong())).thenReturn(booking);
+
+        assertThrows(ValidationException.class, () -> bookingService.getBookingById(1L, 1L));
     }
 
     @Test
