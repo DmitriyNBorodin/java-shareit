@@ -100,7 +100,8 @@ public class BookingServiceImplTest {
 
     @Test
     void addNewBookingWithIncorrectTimeGapTest() {
-        BookingDto newBookingDto = BookingDto.builder().start(LocalDateTime.now()).end(LocalDateTime.now())
+        LocalDateTime sameMoment = LocalDateTime.now();
+        BookingDto newBookingDto = BookingDto.builder().start(sameMoment).end(sameMoment)
                 .itemId(1L).bookerId(1L).status(BookingStatus.WAITING).build();
 
         assertThrows(ValidationException.class, () -> bookingService.addNewBooking(1L, newBookingDto));

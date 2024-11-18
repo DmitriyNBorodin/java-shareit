@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 @DataJpaTest
 class CommentsRepositoryTest {
     @Autowired
@@ -25,16 +26,17 @@ class CommentsRepositoryTest {
     void getCommentsByItemId() {
         User testOwner = User.builder().name("name1").email("1@mail.com").build();
         User testUser = User.builder().name("name2").email("2@mail.com").build();
-        Item testItem = Item.builder().ownerId(1L).name("itemName").description("itemDescription").available(true).build();
-        Comment comment = Comment.builder().author(testUser).item(testItem).text("anyText").created(LocalDateTime.now())
+        User savedTestOwner = userRepository.save(testOwner);
+        User savedTestUser = userRepository.save(testUser);
+
+        Item testItem = Item.builder().ownerId(savedTestOwner.getId()).name("itemName").description("itemDescription").available(true).build();
+        Comment comment = Comment.builder().author(savedTestUser).item(testItem).text("anyText").created(LocalDateTime.now())
                 .build();
 
-        userRepository.save(testOwner);
-        userRepository.save(testUser);
-        itemRepository.save(testItem);
+        Item savedTestItem = itemRepository.save(testItem);
         commentsRepository.save(comment);
 
-        Set<Comment> itemComments = commentsRepository.getCommentsByItemId(1L);
+        Set<Comment> itemComments = commentsRepository.getCommentsByItemId(savedTestItem.getId());
 
         assertFalse(itemComments.isEmpty());
         assertTrue(itemComments.contains(comment));
