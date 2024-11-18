@@ -1,5 +1,6 @@
 package ru.yandex.practicum.item;
 
+import jakarta.validation.ValidationException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -21,6 +22,7 @@ import ru.yandex.practicum.user.model.User;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.atLeast;
@@ -97,8 +99,8 @@ class ItemServiceTest {
 
     @Test
     void updateItem() {
-        ItemDto itemDto = ItemDto.builder().id(1L).name("name").description("descriptionUpdated").build();
-        Item item = Item.builder().id(1L).ownerId(1L).name("name").description("description").build();
+        ItemDto itemDto = ItemDto.builder().id(1L).name("nameUpdated").description("descriptionUpdated").available(false).build();
+        Item item = Item.builder().id(1L).ownerId(1L).name("name").description("description").available(true).build();
         when(itemRepository.getReferenceById(Mockito.anyLong())).thenReturn(item);
 
         itemService.updateItem(1L, itemDto, 1L);
@@ -108,6 +110,14 @@ class ItemServiceTest {
         Item savedItem = itemArgumentCaptor.getValue();
         assertEquals("descriptionUpdated", savedItem.getDescription());
         verify(itemDtoMapper, atLeast(1)).convertItemToDto(Mockito.any(Item.class));
+    }
+
+    @Test
+    void updateItemNotByOwnerTest() {
+        Item testItem = new Item(2L, 5L, "itemName", "itemDescription", true, null);
+        when(itemRepository.getReferenceById(Mockito.anyLong())).thenReturn(testItem);
+
+        assertThrows(ValidationException.class, () -> itemService.updateItem(1L, new ItemDto(), 3L));
     }
 
     @Test
@@ -123,15 +133,17 @@ class ItemServiceTest {
                 .booker(user)
                 .status(BookingStatus.APPROVED)
                 .build();
-         when(itemRepository.getReferenceById(5L)).thenReturn(item);
-         when(itemDtoMapper.convertItemToDto(item)).thenReturn(itemDto);
-         when(bookingRepository.findBookingByItemId(5L)).thenReturn(List.of(booking));
+        when(itemRepository.getReferenceById(5L)).thenReturn(item);
+        when(itemDtoMapper.convertItemToDto(item)).thenReturn(itemDto);
+        when(bookingRepository.findBookingByItemId(5L)).thenReturn(List.of(booking));
+        when(commentRepository.getCommentsByItemId(Mockito.anyLong())).thenReturn(Set.of(new Comment()));
 
-         ItemDto requestedItemDto = itemService.getItemById(5L);
+        ItemDto requestedItemDto = itemService.getItemById(5L);
 
-         verify(itemRepository, atLeast(1)).getReferenceById(5L);
-         verify(bookingRepository, atLeast(1)).findBookingByItemId(5L);
-         assertEquals(booking.getStart(), requestedItemDto.getNextBooking());
+        verify(itemRepository, atLeast(1)).getReferenceById(5L);
+        verify(bookingRepository, atLeast(1)).findBookingByItemId(5L);
+        assertEquals(booking.getStart(), requestedItemDto.getNextBooking());
+        assertEquals(1, requestedItemDto.getComments().size());
     }
 
     @Test

@@ -99,6 +99,14 @@ public class BookingServiceImplTest {
     }
 
     @Test
+    void addNewBookingWithIncorrectTimeGapTest() {
+        BookingDto newBookingDto = BookingDto.builder().start(LocalDateTime.now()).end(LocalDateTime.now())
+                .itemId(1L).bookerId(1L).status(BookingStatus.WAITING).build();
+
+        assertThrows(ValidationException.class, () -> bookingService.addNewBooking(1L, newBookingDto));
+    }
+
+    @Test
     void approveBookingTest() {
         Item item = new Item(1L, 1L, "name", "description", true, null);
         User user = new User(2L, "name", "1@mail.com");
@@ -118,6 +126,19 @@ public class BookingServiceImplTest {
         verify(bookingRepository).save(bookingArgumentCaptor.capture());
         Booking savedBooking = bookingArgumentCaptor.getValue();
         assertEquals(BookingStatus.APPROVED, savedBooking.getStatus());
+    }
+
+    @Test
+    void approveBookingNotByOwnerTest() {
+        Item item = new Item(1L, 6L, "name", "description", true, null);
+        User user = new User(2L, "name", "1@mail.com");
+        Booking booking = Booking.builder().id(1L).start(LocalDateTime.now()).end(LocalDateTime.now().plusHours(1))
+                .item(item).booker(user).status(BookingStatus.WAITING).build();
+        BookedItem bookedItem = () -> new Item(1L, 6L, "name", "description", true, null);
+        when(bookingRepository.findBookingById(Mockito.anyLong())).thenReturn(Optional.of(bookedItem));
+
+        assertThrows(ValidationException.class, () -> bookingService.approveBooking(1L, 1L, "true"));
+        verify(bookingRepository, never()).save(Mockito.any(Booking.class));
     }
 
     @Test

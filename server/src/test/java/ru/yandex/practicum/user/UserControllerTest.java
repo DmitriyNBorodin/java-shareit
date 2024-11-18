@@ -9,6 +9,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.yandex.practicum.user.dto.UserDto;
+import ru.yandex.practicum.user.exceptions.UserNotFoundException;
+import ru.yandex.practicum.user.exceptions.UserValidationException;
 
 import java.nio.charset.StandardCharsets;
 
@@ -53,6 +55,18 @@ class UserControllerTest {
     }
 
     @Test
+    void addUserWithoutNameTest() throws Exception {
+        UserDto user = UserDto.builder().name(null).email("1@mail.com").build();
+        when(userService.addUser(user)).thenThrow(UserValidationException.class);
+
+        mvc.perform(post("/users").content(mapper.writeValueAsString(user))
+                .characterEncoding(StandardCharsets.UTF_8)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isConflict());
+    }
+
+    @Test
     void getUserByIdTest() throws Exception {
         UserDto expectedUser = UserDto.builder().id(1L).name("name").email("1@mail.com").build();
         when(userService.getUserById(Mockito.anyLong())).thenReturn(expectedUser);
@@ -63,6 +77,15 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.id", is(1L), Long.class))
                 .andExpect(jsonPath("$.name", is(expectedUser.getName()), String.class))
                 .andExpect(jsonPath("$.email", is(expectedUser.getEmail()), String.class));
+    }
+
+    @Test
+    void failToGetUserByIdTest() throws Exception {
+        when(userService.getUserById(Mockito.anyLong())).thenThrow(UserNotFoundException.class);
+
+        mvc.perform(get("/users/{id}", 1L).characterEncoding(StandardCharsets.UTF_8)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 
     @Test
