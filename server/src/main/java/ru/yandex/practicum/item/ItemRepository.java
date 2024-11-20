@@ -1,6 +1,7 @@
 package ru.yandex.practicum.item;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import ru.yandex.practicum.item.dto.ItemForRequestDao;
 import ru.yandex.practicum.item.model.Item;
 
@@ -15,4 +16,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     Optional<Item> getItemById(Long itemId);
 
     List<ItemForRequestDao> findByRequestId(Long requestId);
+
+    @Query("select id from Item as i where i.requestId in ?1")
+    List<ItemForRequestDao> findByRequestId(List<Long> requestId);
 }

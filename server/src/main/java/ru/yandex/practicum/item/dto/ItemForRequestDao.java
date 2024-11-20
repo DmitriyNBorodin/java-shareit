@@ -6,4 +6,6 @@ public interface ItemForRequestDao {
     String getName();
 
     Long getOwnerId();
+
+    Long getRequestId();
 }

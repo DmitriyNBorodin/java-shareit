@@ -1,6 +1,6 @@
 package ru.yandex.practicum.request;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,13 +14,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/requests")
+@RequiredArgsConstructor
 public class ItemRequestController {
-    @Autowired
-    private final ItemRequestService itemRequestService;
 
-    public ItemRequestController(ItemRequestService itemRequestService) {
-        this.itemRequestService = itemRequestService;
-    }
+    private final ItemRequestService itemRequestService;
 
     @PostMapping
     public ItemRequest addNewRequest(@RequestHeader("X-Sharer-User-Id") Long userId, @RequestBody ItemRequestDto itemRequestDto) {
