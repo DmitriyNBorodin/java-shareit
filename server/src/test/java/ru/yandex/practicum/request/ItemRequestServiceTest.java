@@ -42,7 +42,8 @@ class ItemRequestServiceTest {
                 LocalDateTime.now(), null);
         ItemRequest itemRequest = new ItemRequest(1L, "anything", 1L, LocalDateTime.now());
         when(itemRequestRepository.save(Mockito.any(ItemRequest.class))).thenReturn(itemRequest);
-        when(mockItemRequestDtoMapper.mapToItemRequest(1L, itemRequestDto)).thenReturn(itemRequest);
+        when(mockItemRequestDtoMapper.mapToItemRequest(1L, itemRequestDto))
+                .thenReturn(itemRequestDtoMapper.mapToItemRequest(1L, itemRequestDto));
 
         itemRequestService.addNewRequest(1L, itemRequestDto);
 
