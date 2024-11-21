@@ -4,6 +4,7 @@ import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.yandex.practicum.booking.dto.BookingDto;
 import ru.yandex.practicum.item.ItemRepository;
 import ru.yandex.practicum.item.exceptions.ItemNotFoundException;
@@ -26,6 +27,7 @@ public class BookingServiceImpl implements BookingService {
     private final ItemRepository itemRepository;
 
     @Override
+    @Transactional
     public Booking addNewBooking(Long userId, BookingDto newBookingDto) {
         log.info("Новый запрос на бронирование {}", newBookingDto);
         if (newBookingDto == null) {
@@ -51,6 +53,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional
     public Booking approveBooking(Long userId, Long bookingId, String approved) {
         Item itemToBook = bookingRepository.findBookingById(bookingId)
                 .orElseThrow(() -> new ItemNotFoundException("Забронированный предмет не найден"))

@@ -2,6 +2,7 @@ package ru.yandex.practicum.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.yandex.practicum.user.dto.UserDto;
 import ru.yandex.practicum.user.exceptions.UserNotFoundException;
 import ru.yandex.practicum.user.exceptions.UserValidationException;
@@ -18,6 +19,7 @@ public class UserService {
         this.userDtoMapper = userDtoMapper;
     }
 
+    @Transactional
     public UserDto addUser(UserDto userDto) {
         User newUser = userDtoMapper.dtoToUser(userDto);
         validateEmail(newUser.getEmail());
@@ -28,6 +30,7 @@ public class UserService {
         return userDtoMapper.userToDto(userRepository.getReferenceById(userId));
     }
 
+    @Transactional
     public UserDto updateUser(Long userId, UserDto userDto) {
         User updatingUser = userRepository.getReferenceById(userId);
         if (userDto.getName() != null) {
@@ -40,6 +43,7 @@ public class UserService {
         return userDtoMapper.userToDto(userRepository.save(updatingUser));
     }
 
+    @Transactional
     public void deleteUser(Long userId) {
         userRepository.deleteById(userId);
     }

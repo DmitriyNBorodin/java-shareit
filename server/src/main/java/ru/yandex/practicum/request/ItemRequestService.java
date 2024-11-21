@@ -18,12 +18,12 @@ import static java.util.stream.Collectors.groupingBy;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class ItemRequestService {
     private final ItemRequestRepository itemRequestRepository;
     private final ItemRepository itemRepository;
     private final ItemRequestDtoMapper itemRequestDtoMapper;
 
+    @Transactional
     public ItemRequest addNewRequest(Long userId, ItemRequestDto itemRequestDto) {
         ItemRequest newItemRequest = itemRequestDtoMapper.mapToItemRequest(userId, itemRequestDto);
         return itemRequestRepository.save(newItemRequest);

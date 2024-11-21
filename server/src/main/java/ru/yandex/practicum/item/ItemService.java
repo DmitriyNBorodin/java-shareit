@@ -4,6 +4,7 @@ import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.yandex.practicum.booking.Booking;
 import ru.yandex.practicum.booking.BookingRepository;
 import ru.yandex.practicum.booking.BookingStatus;
@@ -29,6 +30,7 @@ public class ItemService {
     private final CommentsRepository commentRepository;
     private final CommentDtoMapper commentDtoMapper;
 
+    @Transactional
     public ItemDto addNewItem(Long ownerId, ItemDto newItemDto) {
         userService.validateUser(ownerId);
         Item newItem = itemDtoMapper.convertDtoToItem(ownerId, newItemDto);
@@ -36,6 +38,7 @@ public class ItemService {
         return itemDtoMapper.convertItemToDto(newItem);
     }
 
+    @Transactional
     public CommentDto addNewItemComment(Long userId, Long itemId, CommentDto commentDto) {
         Optional<Booking> bookingForComment = bookingRepository.findBookingByItemIdAndBookerId(itemId, userId);
         validateAbilityToComment(bookingForComment);
@@ -43,6 +46,7 @@ public class ItemService {
         return commentDtoMapper.toCommentDto(commentRepository.save(newComment));
     }
 
+    @Transactional
     public ItemDto updateItem(Long userId, ItemDto itemToUpdate, Long itemId) {
         userService.validateUser(userId);
         Item updatingItem = itemRepository.getReferenceById(itemId);
