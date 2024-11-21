@@ -1,0 +1,12 @@
+spring:
+config:
+activate.on-profile: test
+
+application.name: ShareItAppTest
+main.banner-mode: OFF
+
+datasource:
+username: shareit.test
+password: shareit.test
+url: jdbc:h2:mem:shareit
+driver-class-name: org.h2.Driver
