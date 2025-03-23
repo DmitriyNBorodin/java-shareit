@@ -8,9 +8,6 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * TODO Sprint add-controllers.
- */
 @Data
 @Builder(toBuilder = true)
 @AllArgsConstructor

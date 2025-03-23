@@ -8,9 +8,6 @@ import ru.yandex.practicum.booking.BookingStatus;
 
 import java.time.LocalDateTime;
 
-/**
- * TODO Sprint add-bookings.
- */
 @Builder(toBuilder = true)
 @Data
 @AllArgsConstructor

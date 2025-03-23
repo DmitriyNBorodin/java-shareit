@@ -14,9 +14,6 @@ import ru.yandex.practicum.booking.dto.BookingDto;
 
 import java.util.List;
 
-/**
- * TODO Sprint add-bookings.
- */
 @RestController
 @RequestMapping(path = "/bookings")
 @RequiredArgsConstructor

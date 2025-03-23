@@ -13,10 +13,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-/**
- * TODO Sprint add-item-requests.
- */
-
 @Entity
 @Data
 @Builder(toBuilder = true)

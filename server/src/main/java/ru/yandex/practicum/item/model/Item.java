@@ -13,9 +13,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-/**
- * TODO Sprint add-controllers.
- */
 @Data
 @Builder(toBuilder = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)

@@ -20,9 +20,6 @@ import ru.yandex.practicum.user.model.User;
 
 import java.time.LocalDateTime;
 
-/**
- * TODO Sprint add-bookings.
- */
 @Entity
 @Builder(toBuilder = true)
 @Data
